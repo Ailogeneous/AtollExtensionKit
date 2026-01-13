@@ -8,4 +8,4 @@
 import Foundation
 
 /// AtollExtensionKit version
-public let AtollExtensionKitVersion = "1.0.0"
+public let AtollExtensionKitVersion: String = "1.0.0"
