@@ -169,8 +169,6 @@ public struct AtollLiveActivityDescriptor: Codable, Sendable, Hashable, Identifi
             leadingContent: leadingContent,
             centerTextStyle: centerTextStyle,
             sneakPeekConfig: sneakPeekConfig
-            leadingContent: leadingContent,
-            centerTextStyle: centerTextStyle
         )
     }
     
