@@ -354,7 +354,6 @@ Check out example integrations:
 
 ### "Atoll Not Installed" Error
 
-Users must install Atoll from [atoll.app](https://atoll.app) before using AtollExtensionKit.
 
 ### "Service Unavailable" Error
 
@@ -395,13 +394,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 AtollExtensionKit is available under the **MIT License**. See [LICENSE](LICENSE) for details.
 
 ---
-
-## Support
-
-- 📧 **Email:** support@atoll.app
-- 🐦 **Twitter:** [@AtollApp](https://twitter.com/AtollApp)
-- 💬 **Discord:** [Join Server](https://discord.gg/atoll)
-- 🐛 **Issues:** [GitHub Issues](https://github.com/ebullioscopic/AtollExtensionKit/issues)
 
 ---
 
