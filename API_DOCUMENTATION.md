@@ -106,13 +106,15 @@ Live activities appear in the closed Dynamic Island notch, similar to timer, mus
 
 Extension live activities support **sneak peek** – a temporary HUD that displays your title/subtitle when the activity appears or updates, preventing text from rendering behind the physical notch.
 
-- **Enable automatically** – Set `sneakPeekConfig` to `.default` or omit it entirely to show title/subtitle in a brief HUD when your activity is presented. Text only appears via sneak peek, never under the notch hardware.
+- **Enable automatically** – Omit `sneakPeekConfig` (or set it to `.default`) to show title/subtitle in a brief HUD when your activity is presented. Text only appears via sneak peek, never under the notch hardware.
 - **Custom duration** – Use `.inline(duration: 3.5)` or `.standard(duration: 2.0)` to control how long the sneak peek displays (in seconds).
 - **Show on updates** – Pass `AtollSneakPeekConfig(enabled: true, showOnUpdate: true)` to trigger sneak peek every time you update the activity, not just on initial presentation.
 - **Disable sneak peek** – Set `sneakPeekConfig: .disabled` to prevent automatic HUD displays. Your activity will still render in the closed notch, but the title/subtitle will be hidden to avoid text under the hardware.
 - **Style override** – Use `.inline()` or `.standard()` to force a specific presentation style, overriding the user's Atoll preference. Leave `style: nil` to inherit the user's setting.
 
-**Important:** When sneak peek is enabled and the notch is closed, the center text (title/subtitle) is **automatically suppressed** from the notch itself to prevent rendering under the physical hardware. All messaging is routed through the sneak peek HUD instead.
+You can also override the HUD copy without changing the main descriptor text by setting `sneakPeekTitle` and `sneakPeekSubtitle`. These optional fields fall back to `title` / `subtitle` when omitted, allowing you to keep the notch copy short while presenting richer messaging inside the sneak peek.
+
+**Important:** When sneak peek is enabled and the notch is closed, the center text (title/subtitle) is **automatically suppressed** from the notch itself to prevent rendering under the physical hardware. All messaging is routed through the sneak peek HUD instead. Because Atoll treats a missing configuration as `.default`, the center column remains blank unless you explicitly opt out with `.disabled`.
 
 ### Inline Sneak Peek & Dismissals
 
@@ -139,12 +141,14 @@ let activity = AtollLiveActivityDescriptor(
         font: .system(size: 12, weight: .medium),
         minDuration: 0.5
     ),
-    progressIndicator: .ring(diameter: 28, strokeWidth: 3),
+    progressIndicator: .ring(diameter: 28, strokeWidth: 3, color: .orange),
     accentColor: .orange,
     badgeIcon: .symbol(name: "flame.fill", color: .orange),
     allowsMusicCoexistence: true,
     centerTextStyle: .inline,
-    sneakPeekConfig: .inline(duration: 3.0)  // Shows title/subtitle for 3 seconds
+    sneakPeekConfig: .inline(duration: 3.0),  // Shows title/subtitle for 3 seconds
+    sneakPeekTitle: "Workout timer",
+    sneakPeekSubtitle: "Set 2 of 4"
 )
 
 try await AtollClient.shared.presentLiveActivity(activity)
@@ -159,7 +163,7 @@ let activity = AtollLiveActivityDescriptor(
     subtitle: "update-pkg-v2.dmg",
     leadingIcon: .symbol(name: "arrow.down.circle.fill", color: .blue),
     trailingContent: .text("45%"),
-    progressIndicator: .percentage,
+    progressIndicator: .percentage(color: .blue),
     progress: 0.45,
     accentColor: .blue,
     sneakPeekConfig: AtollSneakPeekConfig(
@@ -197,7 +201,11 @@ AtollClient.shared.onActivityDismiss = { activityID in
 
 **Text label:**
 ```swift
-.text("Running", font: .system(size: 12, weight: .medium))
+.text(
+    "Running",
+    font: .system(size: 12, weight: .medium),
+    color: .accent  // Optional; defaults to the descriptor's accent color
+)
 ```
 
 **Marquee text:**
@@ -205,7 +213,8 @@ AtollClient.shared.onActivityDismiss = { activityID in
 .marquee(
     "Half Marathon Training",
     font: .system(size: 12, weight: .semibold),
-    minDuration: 0.5
+    minDuration: 0.5,
+    color: .gray
 )
 ```
 
@@ -213,7 +222,8 @@ AtollClient.shared.onActivityDismiss = { activityID in
 ```swift
 .countdownText(
     targetDate: Date().addingTimeInterval(3600),
-    font: .monospacedDigit(size: 13, weight: .semibold)
+    font: .monospacedDigit(size: 13, weight: .semibold),
+    color: .green
 )
 ```
 
@@ -238,6 +248,8 @@ AtollClient.shared.onActivityDismiss = { activityID in
 ```
 
 > ℹ️ `leadingContent` accepts the same `AtollTrailingContent` cases, letting you move timers, marquee text, or animations to the left wing when needed.
+
+All text-based trailing cases (`.text`, `.marquee`, `.countdownText`) honor an optional `color` override so you can differentiate labels (e.g., red errors, green success) without altering the descriptor-wide accent color.
 
 ### Leading Segment Overrides
 
@@ -269,22 +281,22 @@ inlineDescriptor.centerTextStyle = .inline
 
 **Ring (circular):**
 ```swift
-.ring(diameter: 26, strokeWidth: 3)
+.ring(diameter: 26, strokeWidth: 3, color: .accent)
 ```
 
 **Bar (horizontal):**
 ```swift
-.bar(width: 90, height: 4, cornerRadius: 2)
+.bar(width: 90, height: 4, cornerRadius: 2, color: .orange)
 ```
 
 **Percentage text:**
 ```swift
-.percentage(font: .system(size: 13, weight: .bold))
+.percentage(font: .system(size: 13, weight: .bold), color: .accent)
 ```
 
 **Countdown timer:**
 ```swift
-.countdown(font: .monospacedDigit(size: 13, weight: .semibold))
+.countdown(font: .monospacedDigit(size: 13, weight: .semibold), color: .accent)
 ```
 
 **Lottie animation:**
@@ -296,6 +308,8 @@ inlineDescriptor.centerTextStyle = .inline
 ```swift
 .none
 ```
+
+Every indicator except `.lottie` and `.none` accepts an optional `color` override so you can align the bar/ring/text tint with the semantic state you are representing without changing the descriptor-wide accent color.
 
 ---
 

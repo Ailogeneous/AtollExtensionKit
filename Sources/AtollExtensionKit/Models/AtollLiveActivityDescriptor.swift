@@ -61,6 +61,12 @@ public struct AtollLiveActivityDescriptor: Codable, Sendable, Hashable, Identifi
     /// Sneak peek configuration (auto-shows title/subtitle on change)
     public let sneakPeekConfig: AtollSneakPeekConfig?
 
+    /// Optional override for the sneak peek title (defaults to `title`)
+    public let sneakPeekTitle: String?
+
+    /// Optional override for the sneak peek subtitle (defaults to `subtitle`)
+    public let sneakPeekSubtitle: String?
+
     private enum CodingKeys: String, CodingKey {
         case id
         case bundleIdentifier
@@ -79,6 +85,8 @@ public struct AtollLiveActivityDescriptor: Codable, Sendable, Hashable, Identifi
         case leadingContent
         case centerTextStyle
         case sneakPeekConfig
+        case sneakPeekTitle
+        case sneakPeekSubtitle
     }
     
     public init(
@@ -98,7 +106,9 @@ public struct AtollLiveActivityDescriptor: Codable, Sendable, Hashable, Identifi
         metadata: [String: String] = [:],
         leadingContent: AtollTrailingContent? = nil,
         centerTextStyle: AtollCenterTextStyle = .inheritUser,
-        sneakPeekConfig: AtollSneakPeekConfig? = nil
+        sneakPeekConfig: AtollSneakPeekConfig? = nil,
+        sneakPeekTitle: String? = nil,
+        sneakPeekSubtitle: String? = nil
     ) {
         self.id = id
         self.bundleIdentifier = bundleIdentifier
@@ -117,6 +127,8 @@ public struct AtollLiveActivityDescriptor: Codable, Sendable, Hashable, Identifi
         self.leadingContent = leadingContent
         self.centerTextStyle = centerTextStyle
         self.sneakPeekConfig = sneakPeekConfig
+        self.sneakPeekTitle = sneakPeekTitle
+        self.sneakPeekSubtitle = sneakPeekSubtitle
     }
     
     /// Convenience initializer that automatically uses the main bundle identifier.
@@ -149,7 +161,9 @@ public struct AtollLiveActivityDescriptor: Codable, Sendable, Hashable, Identifi
         metadata: [String: String] = [:],
         leadingContent: AtollTrailingContent? = nil,
         centerTextStyle: AtollCenterTextStyle = .inheritUser,
-        sneakPeekConfig: AtollSneakPeekConfig? = nil
+        sneakPeekConfig: AtollSneakPeekConfig? = nil,
+        sneakPeekTitle: String? = nil,
+        sneakPeekSubtitle: String? = nil
     ) {
         self.init(
             id: id,
@@ -168,7 +182,9 @@ public struct AtollLiveActivityDescriptor: Codable, Sendable, Hashable, Identifi
             metadata: metadata,
             leadingContent: leadingContent,
             centerTextStyle: centerTextStyle,
-            sneakPeekConfig: sneakPeekConfig
+            sneakPeekConfig: sneakPeekConfig,
+            sneakPeekTitle: sneakPeekTitle,
+            sneakPeekSubtitle: sneakPeekSubtitle
         )
     }
     
@@ -204,6 +220,8 @@ public struct AtollLiveActivityDescriptor: Codable, Sendable, Hashable, Identifi
         metadata = try container.decodeIfPresent([String: String].self, forKey: .metadata) ?? [:]
         leadingContent = try container.decodeIfPresent(AtollTrailingContent.self, forKey: .leadingContent)
         centerTextStyle = try container.decodeIfPresent(AtollCenterTextStyle.self, forKey: .centerTextStyle) ?? .inheritUser
+        sneakPeekTitle = try container.decodeIfPresent(String.self, forKey: .sneakPeekTitle)
+        sneakPeekSubtitle = try container.decodeIfPresent(String.self, forKey: .sneakPeekSubtitle)
     }
 }
 
@@ -220,13 +238,26 @@ public enum AtollCenterTextStyle: String, Codable, Sendable, Hashable {
 /// Trailing content configuration for the right side of the activity.
 public enum AtollTrailingContent: Codable, Sendable, Hashable {
     /// Text label
-    case text(String, font: AtollFontDescriptor = .system(size: 12, weight: .medium))
+    case text(
+        String,
+        font: AtollFontDescriptor = .system(size: 12, weight: .medium),
+        color: AtollColorDescriptor? = nil
+    )
 
     /// Marquee text label
-    case marquee(String, font: AtollFontDescriptor = .system(size: 12, weight: .medium), minDuration: Double = 0.4)
+    case marquee(
+        String,
+        font: AtollFontDescriptor = .system(size: 12, weight: .medium),
+        minDuration: Double = 0.4,
+        color: AtollColorDescriptor? = nil
+    )
 
     /// Countdown (mm:ss / HH:mm:ss) rendered as text
-    case countdownText(targetDate: Date, font: AtollFontDescriptor = .monospacedDigit(size: 13, weight: .semibold))
+    case countdownText(
+        targetDate: Date,
+        font: AtollFontDescriptor = .monospacedDigit(size: 13, weight: .semibold),
+        color: AtollColorDescriptor? = nil
+    )
     
     /// Icon
     case icon(AtollIconDescriptor)
@@ -246,9 +277,9 @@ public enum AtollTrailingContent: Codable, Sendable, Hashable {
             return descriptor.isValid
         case .animation(let data, _):
             return data.count <= 5_242_880 // 5MB limit
-        case .marquee(let text, _, _):
+        case .marquee(let text, _, _, _):
             return !text.isEmpty
-        case .countdownText:
+        case .countdownText(_, _, _):
             return true
         default:
             return true

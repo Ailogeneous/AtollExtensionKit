@@ -51,17 +51,24 @@ let activity = AtollLiveActivityDescriptor(
     subtitle: "Focus Session",
     leadingIcon: .symbol(name: "timer", color: .blue),
     leadingContent: .marquee("Focus • Session 1", font: .system(size: 13, weight: .semibold)),
-    trailingContent: .countdownText(targetDate: Date().addingTimeInterval(1500)),
-    progressIndicator: .ring(color: .blue, lineWidth: 3),
+    trailingContent: .countdownText(
+        targetDate: Date().addingTimeInterval(1500),
+        color: .blue
+    ),
+    progressIndicator: .ring(diameter: 26, strokeWidth: 3, color: .blue),
     centerTextStyle: .inline,
     accentColor: .blue,
     allowsMusicCoexistence: true,
-    sneakPeekConfig: .inline(duration: 2.5)  // Show title/subtitle in HUD for 2.5 seconds
+    sneakPeekConfig: .inline(duration: 2.5),  // Show title/subtitle in HUD for 2.5 seconds
+    sneakPeekTitle: "Deep focus",
+    sneakPeekSubtitle: "Session 1"
 )
 
 // 3. Present it in Atoll
 try await AtollClient.shared.presentLiveActivity(activity)
 ```
+
+> ℹ️ If you omit `sneakPeekConfig`, Atoll defaults to the `.default` behavior (enabled, duration inherited from the host) so your title/subtitle still display in the Sneak Peek HUD while the notch stays clear. Pass `.disabled` to opt out and keep center text visible inside the notch.
 
 ## Building a Live Activity
 
@@ -76,7 +83,8 @@ try await AtollClient.shared.presentLiveActivity(activity)
 
 ### Inline Sneak Peek & Dismissals
 
-- **Sneak peek configuration** – Enable automatic HUD displays with `sneakPeekConfig: .default` to show your title/subtitle when the activity appears. Use `.inline(duration: 3.0)` or `.standard(duration: 2.0)` to customize the display style and duration. Set `showOnUpdate: true` to trigger sneak peek on every update, not just initial presentation. When sneak peek is enabled and the notch is closed, center text is automatically suppressed to prevent rendering under the hardware.
+- **Sneak peek configuration** – Omit `sneakPeekConfig` (or set `.default`) to automatically route your title/subtitle into Atoll's HUD whenever the activity appears. Use `.inline(duration: 3.0)` or `.standard(duration: 2.0)` to customize the display style and duration, and set `showOnUpdate: true` to trigger sneak peek on every update. If you need the center text to remain visible inside the notch, explicitly pass `.disabled`; otherwise Atoll suppresses it while the notch is closed to avoid the hardware cutout.
+- **HUD copy overrides** – Set `sneakPeekTitle` and `sneakPeekSubtitle` when you need different messaging in the HUD versus the main descriptor (e.g., concise notch title with a richer sneak peek phrase). These fall back to `title` / `subtitle` automatically.
 - **Inline center text** – Set `centerTextStyle = .inline` (or leave `.inheritUser`) so Atoll can route your title/subtitle into its Sneak Peek HUD when the user prefers inline mode, keeping the closed notch clear. Pair this with concise trailing content so copy never collides with hardware cutouts.
 - **Leading overrides** – Use `leadingContent` for timers, lap counters, or animated glyphs when you need richer data than a static icon. The API reuses `AtollTrailingContent`, so anything valid on the right wing also works on the left.
 - **Music coexistence** – Mark `allowsMusicCoexistence = true` for activities (e.g., timers) that can share space with the music tile; Atoll will place your badge on the album art and reserve the right wing automatically.
@@ -95,6 +103,8 @@ descriptor.leadingContent = .marquee("Lap 3 / 12", font: .system(size: 13, weigh
 descriptor.trailingContent = .countdownText(targetDate: targetDate)
 descriptor.centerTextStyle = .inline
 ```
+
+Text-based trailing content (`.text`, `.marquee`, `.countdownText`) and every progress indicator except `.lottie`/`.none` accept an optional `color` parameter so you can align individual labels or gauges with their semantic meaning without changing the descriptor's primary accent color.
 
 ---
 
@@ -126,7 +136,7 @@ let activity = AtollLiveActivityDescriptor(
     leadingIcon: .symbol(name: "brain.head.profile", color: .purple),
     leadingContent: .marquee("Lap 2 of 4", font: .system(size: 13, weight: .medium)),
     trailingContent: .countdownText(targetDate: Date().addingTimeInterval(25 * 60)),
-    progressIndicator: .ring(color: .purple, lineWidth: 3),
+    progressIndicator: .ring(diameter: 26, strokeWidth: 3, color: .purple),
     centerTextStyle: .inline,
     accentColor: .purple,
     allowsMusicCoexistence: true

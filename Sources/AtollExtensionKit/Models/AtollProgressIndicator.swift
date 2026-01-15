@@ -11,16 +11,16 @@ import CoreGraphics
 /// Visual representation of progress within a live activity.
 public enum AtollProgressIndicator: Codable, Sendable, Hashable {
     /// Circular ring progress (like timer)
-    case ring(diameter: CGFloat = 24, strokeWidth: CGFloat = 3)
+    case ring(diameter: CGFloat = 24, strokeWidth: CGFloat = 3, color: AtollColorDescriptor? = nil)
     
     /// Horizontal progress bar
-    case bar(width: CGFloat? = nil, height: CGFloat = 4, cornerRadius: CGFloat = 2)
+    case bar(width: CGFloat? = nil, height: CGFloat = 4, cornerRadius: CGFloat = 2, color: AtollColorDescriptor? = nil)
     
     /// Percentage text display
-    case percentage(font: AtollFontDescriptor = .system(size: 13, weight: .semibold))
+    case percentage(font: AtollFontDescriptor = .system(size: 13, weight: .semibold), color: AtollColorDescriptor? = nil)
     
     /// Countdown timer (mm:ss or HH:mm:ss format)
-    case countdown(font: AtollFontDescriptor = .monospacedDigit(size: 13, weight: .semibold))
+    case countdown(font: AtollFontDescriptor = .monospacedDigit(size: 13, weight: .semibold), color: AtollColorDescriptor? = nil)
     
     /// Custom Lottie animation (must provide animation data)
     case lottie(animationData: Data, size: CGSize = CGSize(width: 30, height: 30))
