@@ -4,23 +4,33 @@
 [![Platform](https://img.shields.io/badge/Platform-macOS%2013.0+-lightgrey.svg)](https://www.apple.com/macos/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**AtollExtensionKit** is a Swift SDK that allows third-party macOS applications to display custom live activities and lock screen widgets inside [Atoll (DynamicIsland)](https://atoll.app).
+**AtollExtensionKit** is a Swift SDK that allows third-party macOS applications to display custom live activities and lock screen widgets inside [Atoll](https://github.com/Ebullioscopic/Atoll).
 
-![AtollExtensionKit Demo](Media/demo.png)
+<p align="center">
+    <img src=".github/assets/Atoll%20developer-macOS-Default-1024x1024@1x.png" alt="AtollExtensionKit" width="180">
+</p>
+
+<p align="center">
+    <video src=".github/assets/LiveActivity.mov" controls muted playsinline width="720"></video>
+</p>
+
+<p align="center">
+    <video src=".github/assets/LockScreen.mov" controls muted playsinline width="720"></video>
+</p>
 
 ## Features
 
-✨ **Live Activities** - Display real-time information in the closed notch (timer, downloads, workouts, etc.)  
-🔒 **Lock Screen Widgets** - Show custom widgets on the macOS lock screen  
-🌫️ **Custom Liquid Glass** - Request Apple liquid-glass variants (0–19) so extension widgets match Atoll’s lock screen sliders  
-🫧 **Sneak Peek Alignment** - Route titles/subtitles into Atoll's inline HUD so text never hides under the notch with configurable duration and modes  
-🎨 **Full Customization** - Icons, colors, progress indicators, leading overrides, marquee/countdown trailing text, center styles, and sneak peek configuration  
-🪟 **Transparent Web Widgets** - Liquid glass materials, custom borders/shadows, and sandboxed transparent web views for bespoke lock screen chrome  
-⚡ **XPC Communication** - Fast, secure inter-process communication  
-🔐 **Permission System** - User-controlled authorization in Atoll Settings  
-📊 **Priority Management** - Smart conflict resolution when multiple activities compete  
-✅ **Type-Safe** - Modern Swift API with Codable models and async/await  
-🎬 **Smooth Animations** - Spring-based scale transitions for appear/dismiss with customizable sneak peek behavior
+- **Live Activities** - Display real-time information in the closed notch (timer, downloads, workouts, etc.)  
+- **Lock Screen Widgets** - Show custom widgets on the macOS lock screen  
+- **Custom Liquid Glass** - Request Apple liquid-glass variants (0–19) so extension widgets match Atoll’s lock screen sliders  
+- **Sneak Peek Alignment** - Route titles/subtitles into Atoll's inline HUD so text never hides under the notch with configurable duration and modes  
+- **Full Customization** - Icons, colors, progress indicators, leading overrides, marquee/countdown trailing text, center styles, and sneak peek configuration  
+- **Transparent Web Widgets** - Liquid glass materials, custom borders/shadows, and sandboxed transparent web views for bespoke lock screen chrome  
+- **XPC Communication** - Fast, secure inter-process communication  
+- **Permission System** - User-controlled authorization in Atoll Settings  
+- **Priority Management** - Smart conflict resolution when multiple activities compete  
+- **Type-Safe** - Modern Swift API with Codable models and async/await  
+- **Smooth Animations** - Spring-based scale transitions for appear/dismiss with customizable sneak peek behavior
 
 ---
 
@@ -68,9 +78,9 @@ let activity = AtollLiveActivityDescriptor(
 try await AtollClient.shared.presentLiveActivity(activity)
 ```
 
-> ℹ️ If you omit `sneakPeekConfig`, Atoll defaults to the `.default` behavior (enabled, duration inherited from the host) so your title/subtitle still display in the Sneak Peek HUD while the notch stays clear. Pass `.disabled` to opt out and keep center text visible inside the notch. Extension descriptors requesting `.inline` are automatically converted to `.standard` because inline HUDs are now reserved for Atoll’s built-in experiences.
+> If you omit `sneakPeekConfig`, Atoll defaults to the `.default` behavior (enabled, duration inherited from the host) so your title/subtitle still display in the Sneak Peek HUD while the notch stays clear. Pass `.disabled` to opt out and keep center text visible inside the notch. Extension descriptors requesting `.inline` are automatically converted to `.standard` because inline HUDs are now reserved for Atoll’s built-in experiences.
 
-> 🎯 Want a ring/bar/percentage on the right wing? Set `trailingContent: .none` and supply `progressIndicator` instead. Trailing text/content and progress indicators are mutually exclusive so the wing always renders a single element.
+> Want a ring/bar/percentage on the right wing? Set `trailingContent: .none` and supply `progressIndicator` instead. Trailing text/content and progress indicators are mutually exclusive so the wing always renders a single element.
 
 ## Building a Live Activity
 
@@ -81,7 +91,7 @@ try await AtollClient.shared.presentLiveActivity(activity)
 5. **Listen for callbacks** – hook `onActivityDismiss` to learn when the user or Atoll revoked your activity so you can stop background work or show UI in your app.
 6. **Debug with Atoll diagnostics** – inside Atoll → Settings → Extensions, enable *Extension diagnostics logging* to mirror every XPC payload, validation decision, and display outcome in the macOS Console under the `com.ebullioscopic.Atoll` subsystem. The new logs call out whether your activity rendered (music pairing vs standalone) or was hidden by user settings.
 
-> ✅ Tip: keep a single long-lived `AtollClient.shared` reference per process and re-use descriptor builders to avoid repeatedly instantiating large payloads.
+> Tip: keep a single long-lived `AtollClient.shared` reference per process and re-use descriptor builders to avoid repeatedly instantiating large payloads.
 
 ### Sneak Peek Behavior & Dismissals
 
@@ -112,7 +122,7 @@ Text-based trailing content (`.text`, `.marquee`, `.countdownText`) and every pr
 
 ## Documentation
 
-📖 **[Full API Documentation](API_DOCUMENTATION.md)**
+**[Full API Documentation](API_DOCUMENTATION.md)**
 
 - [Getting Started](API_DOCUMENTATION.md#getting-started)
 - [Authorization](API_DOCUMENTATION.md#authorization)
@@ -319,7 +329,7 @@ When multiple activities compete for space, **priority** determines visibility:
 
 ## Best Practices
 
-### ✅ Do
+### Do
 
 - Use appropriate priorities (most should be `.normal`)
 - Keep titles/subtitles concise (1-7 words)
@@ -329,7 +339,7 @@ When multiple activities compete for space, **priority** determines visibility:
 - Validate descriptors before presenting
 - Match the user’s Sneak Peek preference by using `.inheritUser` or opt into `.inline` when you want text routed into the HUD
 
-### ❌ Don't
+### Don't
 
 - Overuse `.critical` priority
 - Present dismissed activities immediately
@@ -466,10 +476,10 @@ AtollExtensionKit is available under the **MIT License**. See [LICENSE](LICENSE)
 
 ## Credits
 
-Built with ❤️ by the Atoll team.
+Built by the Atoll team.
 
 Special thanks to the community for feedback and contributions!
 
 ---
 
-**⭐ If you find AtollExtensionKit useful, please star the repo!**
+If you find AtollExtensionKit useful, please star the repo.
