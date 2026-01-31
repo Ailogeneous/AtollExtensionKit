@@ -11,11 +11,11 @@
 </p>
 
 <p align="center">
-    <video src=".github/assets/LiveActivity.mov" controls muted playsinline width="720"></video>
+    <video src="https://github.com/Ebullioscopic/AtollExtensionKit/blob/main/.github/assets/LiveActivity.mov" controls muted playsinline width="720"></video>
 </p>
 
 <p align="center">
-    <video src=".github/assets/LockScreen.mov" controls muted playsinline width="720"></video>
+    <video src="https://github.com/Ebullioscopic/AtollExtensionKit/blob/main/.github/assets/LiveActivity.mov" controls muted playsinline width="720"></video>
 </p>
 
 ## Features
